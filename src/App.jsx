@@ -23,7 +23,7 @@ function App() {
   return (
     <>
      
-    <BrowserRouter>
+    <BrowserRouter basename="/alhalqat">
     <Routes>
   
       {/* <Route path='/' element={
