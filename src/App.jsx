@@ -61,7 +61,7 @@ function App() {
         setStudents={setStudents}
         />
       }/>
-      <Route path='/students' element={
+      <Route path='/students/:studentId' element={
         <StuHistory 
         
         students={students}
