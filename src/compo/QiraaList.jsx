@@ -15,8 +15,12 @@ export default function QiraaList({ recitations, students, onDelete, showStudent
           <div>
             {showStudent && <strong>{studentName(r.studentId)} — </strong>}
             <span className="badge bg-secondary ms-1">{r.type === "new" ? "جديد" : "مراجعة"}</span>{" "}
-            {r.surah} ({r.from}–{r.to})
-            <div className="text-muted small">{r.date}</div>
+            {r.fromSurah
+              ? r.fromSurah === r.toSurah
+                 ? `${r.fromSurah} (${r.fromAyah}–${r.toAyah})`
+                    : `${r.fromSurah} (${r.fromAyah}) ← ${r.toSurah} (${r.toAyah})`
+                        : `${r.surah} (${r.from}–${r.to})`}
+            <div className="text-muted small"> {new Date(r.date + "T00:00:00").toLocaleDateString("ar-EG", { weekday: "long" })} - {r.date}</div>
           </div>
           <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(r.id)}>
             حذف

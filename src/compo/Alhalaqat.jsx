@@ -33,7 +33,7 @@ function Alhalaqat({ teacher, setTeacher, halaqat, setHalaqat }) {
   return (
     <div className="container">
       <Header teacher={teacher} setTeacher={setTeacher} />
-<Link to={"/"}>الصفحة الرئيسية</Link>
+      <Link to={"/"}>الصفحة الرئيسية</Link>
       <form onSubmit={submit} className="d-flex gap-2 mb-3">
         <input
           className="form-control"

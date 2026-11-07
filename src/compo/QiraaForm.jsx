@@ -4,30 +4,45 @@ import {surahs} from "../data/surahs";
 export default function QiraaForm({ students, onAdd }) {
   const [studentId, setStudentId] = useState("");
   const [type, setType] = useState("new");
-  const [surahName, setSurahName] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+ const [fromSurah, setFromSurah] = useState("");
+const [fromAyah, setFromAyah] = useState("");
+const [toSurah, setToSurah] = useState("");
+const [toAyah, setToAyah] = useState("");
   const [error, setError] = useState("");
 
   function submit(e) {
     e.preventDefault();
-    const surah = surahs.find((s) => s.name === surahName);
-    const f = Number(from);
-    const t = Number(to);
+   const sFrom = surahs.find((s) => s.name === fromSurah);
+  const sTo = surahs.find((s) => s.name === toSurah);
+  const f = Number(fromAyah);
+  const t = Number(toAyah);
+if (!studentId || !sFrom || !sTo) return setError("اختر الطالب والسورتين");
+  if (!Number.isInteger(f) || !Number.isInteger(t) || f < 1 || t < 1)
+    return setError("أدخل أرقام آيات صحيحة");
+  if (f > sFrom.ayahs)
+    return setError(`عدد آيات سورة ${sFrom.name} هو ${sFrom.ayahs}`);
+  if (t > sTo.ayahs)
+    return setError(`عدد آيات سورة ${sTo.name} هو ${sTo.ayahs}`);
 
-    if (!studentId || !surah) return setError("اختر الطالب والسورة");
-    if (!Number.isInteger(f) || !Number.isInteger(t) || f < 1)
-      return setError("أدخل أرقام آيات صحيحة");
-    if (t > surah.ayahs)
-      return setError(`عدد آيات سورة ${surah.name} هو ${surah.ayahs}`);
-    if (f > t) return setError("آية البداية أكبر من آية النهاية");
+  const i = surahs.indexOf(sFrom);
+  const j = surahs.indexOf(sTo);
+  if (i > j) return setError("سورة النهاية قبل سورة البداية");
+  if (i === j && f > t) return setError("آية البداية أكبر من آية النهاية");
 
-    onAdd({ studentId, type, surah: surah.name, from: f, to: t });
-    setError("");
-    setSurahName("");
-    setFrom("");
-    setTo("");
-  }
+  onAdd({
+    studentId,
+    type,
+    fromSurah: sFrom.name,
+    fromAyah: f,
+    toSurah: sTo.name,
+    toAyah: t,
+  });
+  setError("");
+  setFromSurah("");
+  setFromAyah("");
+  setToSurah("");
+  setToAyah("");
+}
 
   return (
     <form onSubmit={submit} className="mb-4">
@@ -49,21 +64,32 @@ export default function QiraaForm({ students, onAdd }) {
       </div>
 
       <div className="row g-2 mb-2">
-        <div className="col-12 col-md-6">
-          <select className="form-select" value={surahName} onChange={(e) => setSurahName(e.target.value)}>
-            <option value="">اختر السورة</option>
-            {surahs.map((s) => (
-              <option key={s.name} value={s.name}>{s.name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="col-6 col-md-3">
-          <input type="number" min="1" className="form-control" placeholder="من آية" value={from} onChange={(e) => setFrom(e.target.value)} />
-        </div>
-        <div className="col-6 col-md-3">
-          <input type="number" min="1" className="form-control" placeholder="إلى آية" value={to} onChange={(e) => setTo(e.target.value)} />
-        </div>
-      </div>
+  <div className="col-8">
+    <select className="form-select" value={fromSurah} onChange={(e) => setFromSurah(e.target.value)}>
+      <option value="">من سورة</option>
+      {surahs.map((s) => (
+        <option key={s.name} value={s.name}>{s.name}</option>
+      ))}
+    </select>
+  </div>
+  <div className="col-4">
+    <input type="number" min="1" className="form-control" placeholder="آية" value={fromAyah} onChange={(e) => setFromAyah(e.target.value)} />
+  </div>
+</div>
+
+<div className="row g-2 mb-2">
+  <div className="col-8">
+    <select className="form-select" value={toSurah} onChange={(e) => setToSurah(e.target.value)}>
+      <option value="">إلى سورة</option>
+      {surahs.map((s) => (
+        <option key={s.name} value={s.name}>{s.name}</option>
+      ))}
+    </select>
+  </div>
+  <div className="col-4">
+    <input type="number" min="1" className="form-control" placeholder="آية" value={toAyah} onChange={(e) => setToAyah(e.target.value)} />
+  </div>
+</div>
 
       {error && <div className="text-danger mb-2">{error}</div>}
       <button className="btn btn-success">إضافة</button>
