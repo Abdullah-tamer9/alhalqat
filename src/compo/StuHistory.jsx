@@ -28,7 +28,7 @@ export default function StuHistory({ students, recitations, setRecitations }) {
     <div className="container">
       <div className="d-flex gap-3">
         <Link to="/">← اليوم</Link>
-        <Link to={`/halaqat/${student.halaqaId}`}>← الحلقة</Link>
+        <Link to={`/alHalqat/${student.halaqaId}`}>← الحلقة</Link>
       </div>
       <h4 className="my-3">سجل {student.name}</h4>
 
